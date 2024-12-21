@@ -4,8 +4,27 @@
     box-sizing: border-box;
 }
 
+@font-face {
+    font-family: "Baskerville 10 Pro";
+    src: url("../fonts/Baskerville10Pro.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Baskerville 10 Pro";
+    src: url();
+}
+
+@font-face {
+    font-family: "Baskerville 10 Pro";
+    src: url("../fonts/Baskerville10Pro-Bold.otf") format("opentype");
+    font-weight: bold;
+    font-style: normal;
+}
+
 body {
-    font-family: 'Inter', -apple-system, sans-serif;
+    font-family: "Baskerville 10 Pro", sans-serif;
     background: #f5f5f5;
     min-height: 100vh;
     display: flex;
@@ -61,6 +80,8 @@ header {
     justify-content: center;
     text-align: center;
     font-size: 1.5rem;
+    font-weight: 500;
+    font-feature-settings: "ss07";
     line-height: 1.6;
 }
 

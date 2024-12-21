@@ -7,10 +7,12 @@
     <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
-    <header>penses</header>
+    <header>
+        <h1>penses</h1>
+    </header>
     <div class="container">
         <div class="card-scene">
-            <div class="card">
+            <div class="card" role="region" aria-label="Thought card">
                 <div class="card__face card__face--front">
                     Great things are meant to be hard
                 </div>
@@ -27,6 +29,8 @@
         <button onclick="randomCard()" style="margin-top: 1rem; width: 100%;">Random Pensée</button>
     </div>
     <div class="add-button" onclick="addPensee()">+</div>
+    <input type="file" id="importPenses" style="display: none" accept=".txt" onchange="importPensesFromFile(this)">
+    <button onclick="document.getElementById('importPenses').click()" style="position: fixed; bottom: 2rem; left: 2rem; width: auto;">Import Pensées</button>
     <script src="scripts/main.js"></script>
 
 </body>
