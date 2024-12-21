@@ -25,6 +25,13 @@
     font-style: italic;
   }
 
+@font-face {
+    font-family: "Warbler Display Regular";
+    src: url("../fonts/WarblerDisplayV1-Regular.otf") format("opentype");
+    /* font-weight: normal; */
+    /* font-style: normal; */
+  }
+
   
 
 body {
@@ -40,7 +47,8 @@ header {
     width: 100%;
     padding: 2rem;
     text-align: center;
-    font-weight: 300;
+    font-weight: normal;
+    font-family: "Warbler Display Regular";
     letter-spacing: -0.5px;
 }
 
