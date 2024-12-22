@@ -26,13 +26,28 @@
   }
 
 @font-face {
-    font-family: "Warbler Display Regular";
-    src: url("../fonts/WarblerDisplayV1-Regular.otf") format("opentype");
-    /* font-weight: normal; */
-    /* font-style: normal; */
+    font-family: "Warbler Deck Regular";
+    src: url("../fonts/WarblerDeckV1-Regular.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
   }
 
-  
+  @font-face {
+    font-family: "Warbler Deck Regular Italic";
+    src: url("../fonts/WarblerDeckV1-Italic.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+  }
+
+header {
+    width: 100%;
+    padding: 2rem;
+    font-size: 3rem;
+    text-align: center;
+    font-weight: 300 !important;
+    font-family: "Warbler Deck Regular Italic";
+    /* letter-spacing: -0.5px; */
+}
 
 body {
     font-family: "Baskerville 10 Pro", sans-serif;
@@ -41,15 +56,6 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-header {
-    width: 100%;
-    padding: 2rem;
-    text-align: center;
-    font-weight: normal;
-    font-family: "Warbler Display Regular";
-    letter-spacing: -0.5px;
 }
 
 .container {
@@ -61,7 +67,7 @@ header {
 
 .card-scene {
     perspective: 1000px;
-    height: 400px;
+    height: 300px;
 }
 
 .card {
@@ -134,7 +140,7 @@ button:hover {
 
 .counter {
     font-size: 1rem;
-    font-family: ;
+    font-family: system-ui, -apple-system, sans-serif;
     color: #666;
 }
 
@@ -158,4 +164,20 @@ button:hover {
 
 .add-button:hover {
     transform: scale(1.1);
+}
+
+.footer {
+    width: 100%;
+    padding: 2rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: auto;
+    /* background: #fff; */
+}
+
+.footer-image {
+    max-width: 100px;  /* Adjust this value based on your image size */
+    opacity: 0.8;      /* Makes it slightly subtle like in the example */
+    padding-bottom: 5%;
 }
