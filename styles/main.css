@@ -36,7 +36,7 @@
     font-family: "Warbler Deck Regular Italic";
     src: url("../fonts/WarblerDeckV1-Italic.otf") format("opentype");
     font-weight: normal;
-    font-style: normal;
+    font-style: italic;
   }
 
 header {
@@ -46,6 +46,7 @@ header {
     text-align: center;
     font-weight: 300 !important;
     font-family: "Warbler Deck Regular Italic";
+    font-style: italic;
     /* letter-spacing: -0.5px; */
 }
 
