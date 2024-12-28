@@ -23,7 +23,7 @@
         </div>
         <div class="navigation">
             <button onclick="previousCard()">Previous</button>
-            <span class="counter">1/250</span>
+            <span class="counter">1/1</span>
             <button onclick="nextCard()">Next</button>
         </div>
         <button onclick="randomCard()" style="margin-top: 1rem; width: 100%;">Random Pensée</button>
@@ -36,5 +36,9 @@
     <footer class="footer">
         <img src="assets/fleruron.svg" alt="Footer illustration" class="footer-image">
     </footer>
+    <script>
+        // Add this at the end of the file, after all the function definitions
+        updateCard();
+    </script>
 </body>
 </html>
