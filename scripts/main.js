@@ -1,4 +1,22 @@
-// Function to parse penses from text format
+// Initialize empty penses array
+let penses = [];
+let currentIndex = 0;
+const card = document.querySelector('.card');
+let isFlipped = false;
+
+// Function to load penses from file
+async function loadPenses() {
+    try {
+        const response = await fetch('assets/penses-list/penses-list-1.txt');
+        const text = await response.text();
+        penses = parsePensesText(text);
+        updateCard(); // Update the card after loading penses
+    } catch (error) {
+        console.error('Error loading penses:', error);
+    }
+}
+
+// Your existing parsePensesText function stays the same
 function parsePensesText(text) {
     const lines = text.split('\n');
     const penses = [];
@@ -59,26 +77,14 @@ function parsePensesText(text) {
     return penses;
 }
 
-// Sample data structure for pensées with image support
-const penses = [
-    {
-        front: "Great things are meant to be hard",
-        back: "The resistance we face when pursuing significant goals isn't just an obstacle - it's a signal. It tells us we're pushing beyond our comfort zone, growing, and attempting something truly worthwhile.",
-        type: "text"
-    },
-    // Add more pensées here
-];
-
-let currentIndex = 0;
-const card = document.querySelector('.card');
-let isFlipped = false;
-
 function toggleCard() {
     isFlipped = !isFlipped;
     card.classList.toggle('is-flipped');
 }
 
 function updateCard() {
+    if (penses.length === 0) return;  // Guard against empty penses array
+    
     const pensee = penses[currentIndex];
     const frontFace = document.querySelector('.card__face--front');
     const backFace = document.querySelector('.card__face--back');
@@ -123,22 +129,11 @@ function randomCard() {
 }
 
 function addPensee() {
-    // This function would open a form to add new pensées
     alert('Add new pensée functionality coming soon!');
 }
 
+// Event listeners
 card.addEventListener('click', toggleCard);
 
-function importPensesFromFile(input) {
-    const file = input.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const text = e.target.result;
-            const newPenses = parsePensesText(text);
-            penses.push(...newPenses);
-            updateCard();
-        };
-        reader.readAsText(file);
-    }
-}
+// Load penses when the page loads
+document.addEventListener('DOMContentLoaded', loadPenses);
