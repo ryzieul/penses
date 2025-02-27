@@ -75,7 +75,9 @@ function initPageFlip() {
         pageFlip.destroy();
     }
     
-    pageFlip = new St.PageFlip(document.getElementById('pensee-book'), {
+    try {
+        // Using St.PageFlip as the library is exposed under the St namespace
+        pageFlip = new St.PageFlip(document.getElementById('pensee-book'), {
         width: 400,
         height: 500,
         size: 'stretch',
@@ -102,6 +104,15 @@ function initPageFlip() {
         currentIndex = Math.floor(e.data / 2);
         updateCounter();
     });
+    } catch (error) {
+        console.error("Error initializing PageFlip:", error);
+        // Fallback to simple display if PageFlip fails
+        const defaultMessage = document.createElement('div');
+        defaultMessage.className = 'fallback-message';
+        defaultMessage.textContent = penses.length > 0 ? penses[0].front : 'No pensées yet';
+        document.getElementById('pensee-book').innerHTML = '';
+        document.getElementById('pensee-book').appendChild(defaultMessage);
+    }
 }
 
 // Function to update counter
@@ -406,7 +417,9 @@ function importPensees() {
 // Storage functions
 function savePensesToStorage() {
     try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(penses));
+        const data = JSON.stringify(penses);
+        localStorage.setItem(STORAGE_KEY, data);
+        console.log('Saved pensées to localStorage:', penses.length);
     } catch (e) {
         console.error('Error saving pensées to localStorage:', e);
     }
@@ -416,12 +429,17 @@ function loadPensesFromStorage() {
     try {
         const storedData = localStorage.getItem(STORAGE_KEY);
         if (storedData) {
-            penses = JSON.parse(storedData);
-            return true;
+            const parsedData = JSON.parse(storedData);
+            if (Array.isArray(parsedData) && parsedData.length > 0) {
+                penses = parsedData;
+                console.log('Loaded pensées from localStorage:', penses.length);
+                return true;
+            }
         }
     } catch (e) {
         console.error('Error loading pensées from localStorage:', e);
     }
+    console.log('No pensées found in localStorage');
     return false;
 }
 
