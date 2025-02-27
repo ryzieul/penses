@@ -5,25 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Penses</title>
     <link rel="stylesheet" href="styles/main.css">
+    <script src="scripts/lib/page-flip.browser.js"></script>
 </head>
 <body>
     <header>
         penses
     </header>
     <div class="container">
-        <div class="card-scene">
-            <div class="card" role="region" aria-label="Thought card">
-                <div class="card__face card__face--front">
-                    Creation is the highest form
-                </div>
-                <div class="card__face card__face--back text-content">
-                    It is not enough to consume, you must create. This applies to everything: emanate, don’t collect.
-                </div>
+        <div id="book-container" class="book-container">
+            <div id="pensee-book" class="pensee-book">
+                <!-- Pages will be loaded by JavaScript -->
             </div>
         </div>
         <div class="navigation">
             <button onclick="previousCard()">Previous</button>
-            <span class="counter">1/1</span>
+            <span class="counter">1 of 1</span>
             <button onclick="nextCard()">Next</button>
         </div>
         <div class="button-group">

@@ -1,9 +1,117 @@
 // Initialize empty penses array
 let penses = [];
 let currentIndex = 0;
-const card = document.querySelector('.card');
-let isFlipped = false;
 let previewPensesData = [];
+let pageFlip; // PageFlip instance
+
+// CONSTANTS
+const STORAGE_KEY = 'pensee_data';
+
+// Function to initialize page flip
+function initPageFlip() {
+    const bookElement = document.getElementById('pensee-book');
+    
+    // Clear any existing content
+    bookElement.innerHTML = '';
+    
+    if (penses.length === 0) {
+        // If no pensées, create empty placeholder pages
+        const emptyPage = document.createElement('div');
+        emptyPage.className = 'page';
+        emptyPage.setAttribute('data-density', 'hard');
+        
+        const emptyContent = document.createElement('div');
+        emptyContent.className = 'page-content';
+        emptyContent.textContent = 'No pensées yet';
+        
+        emptyPage.appendChild(emptyContent);
+        bookElement.appendChild(emptyPage);
+        
+        document.querySelector('.counter').textContent = `0 of 0`;
+    } else {
+        // Create pages for each pensée
+        penses.forEach((pensee, index) => {
+            // Front page (left side)
+            const frontPage = document.createElement('div');
+            frontPage.className = 'page';
+            if (index === 0) {
+                frontPage.setAttribute('data-density', 'hard');
+            }
+            
+            const frontContent = document.createElement('div');
+            frontContent.className = 'page-content left-page';
+            frontContent.textContent = pensee.front;
+            
+            frontPage.appendChild(frontContent);
+            bookElement.appendChild(frontPage);
+            
+            // Back page (right side)
+            const backPage = document.createElement('div');
+            backPage.className = 'page';
+            if (index === penses.length - 1) {
+                backPage.setAttribute('data-density', 'hard');
+            }
+            
+            const backContent = document.createElement('div');
+            backContent.className = 'page-content right-page';
+            
+            if (pensee.type === 'image') {
+                const img = document.createElement('img');
+                img.src = pensee.back;
+                img.alt = 'Illustration';
+                backContent.appendChild(img);
+            } else {
+                backContent.className += ' text-content';
+                backContent.textContent = pensee.back || '';
+            }
+            
+            backPage.appendChild(backContent);
+            bookElement.appendChild(backPage);
+        });
+    }
+    
+    // Initialize PageFlip
+    if (pageFlip) {
+        pageFlip.destroy();
+    }
+    
+    pageFlip = new St.PageFlip(document.getElementById('pensee-book'), {
+        width: 400,
+        height: 500,
+        size: 'stretch',
+        minWidth: 250,
+        maxWidth: 800,
+        minHeight: 300,
+        maxHeight: 800,
+        maxShadowOpacity: 0.5,
+        showCover: true,
+        flippingTime: 700,
+        usePortrait: true,
+        startPage: currentIndex * 2,
+        autoSize: true,
+        drawShadow: true,
+        mobileScrollSupport: true
+    });
+    
+    // Load pages
+    pageFlip.loadFromHTML(document.querySelectorAll('.page'));
+    
+    // Event listener for page turning
+    pageFlip.on('flip', (e) => {
+        // Update current index (divide by 2 because we have 2 pages per pensée)
+        currentIndex = Math.floor(e.data / 2);
+        updateCounter();
+    });
+}
+
+// Function to update counter
+function updateCounter() {
+    if (penses.length === 0) {
+        document.querySelector('.counter').textContent = `0 of 0`;
+        return;
+    }
+    document.querySelector('.counter').textContent = `${currentIndex + 1} of ${penses.length}`;
+}
 
 // Function to parse penses text (Notes.app format)
 function parsePensesText(text) {
@@ -66,63 +174,28 @@ function parsePensesText(text) {
     return penses;
 }
 
-// Card functions
-function toggleCard() {
-    isFlipped = !isFlipped;
-    card.classList.toggle('is-flipped');
-}
-
-function updateCard() {
-    if (penses.length === 0) {
-        const frontFace = document.querySelector('.card__face--front');
-        const backFace = document.querySelector('.card__face--back');
-        
-        frontFace.textContent = "No pensées yet";
-        backFace.textContent = "Add pensées using the Manage button";
-        document.querySelector('.counter').textContent = "0 of 0";
-        return;
-    }
-    
-    const pensee = penses[currentIndex];
-    const frontFace = document.querySelector('.card__face--front');
-    const backFace = document.querySelector('.card__face--back');
-    
-    frontFace.textContent = pensee.front;
-    if (pensee.type === 'image') {
-        backFace.innerHTML = `<img src="${pensee.back}" alt="Illustration" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
-        backFace.classList.remove('text-content');
-    } else {
-        backFace.textContent = pensee.back || '';
-        backFace.classList.add('text-content');
-    }
-    
-    document.querySelector('.counter').textContent = `${currentIndex + 1} of ${penses.length}`;
-}
-
+// Navigation functions
 function nextCard() {
-    if (penses.length === 0) return;
-    if (currentIndex < penses.length - 1) {
-        currentIndex++;
-        if (isFlipped) toggleCard();
-        updateCard();
-    }
+    if (penses.length === 0 || currentIndex >= penses.length - 1) return;
+    currentIndex++;
+    pageFlip.flip(currentIndex * 2);
 }
 
 function previousCard() {
-    if (penses.length === 0) return;
-    if (currentIndex > 0) {
-        currentIndex--;
-        if (isFlipped) toggleCard();
-        updateCard();
-    }
+    if (penses.length === 0 || currentIndex <= 0) return;
+    currentIndex--;
+    pageFlip.flip(currentIndex * 2);
 }
 
 function randomCard() {
-    if (penses.length === 0) return;
-    const newIndex = Math.floor(Math.random() * penses.length);
+    if (penses.length <= 1) return;
+    let newIndex;
+    do {
+        newIndex = Math.floor(Math.random() * penses.length);
+    } while (newIndex === currentIndex);
+    
     currentIndex = newIndex;
-    if (isFlipped) toggleCard();
-    updateCard();
+    pageFlip.flip(currentIndex * 2);
 }
 
 function addPensee() {
@@ -189,7 +262,18 @@ function renderPreview() {
         
         const back = document.createElement('div');
         back.className = 'preview-card-back';
-        back.textContent = pensee.back || '(No back content)';
+        
+        if (pensee.type === 'image') {
+            const img = document.createElement('img');
+            img.src = pensee.back;
+            img.alt = 'Image';
+            img.style.maxWidth = '100%';
+            img.style.maxHeight = '80px';
+            img.style.objectFit = 'contain';
+            back.appendChild(img);
+        } else {
+            back.textContent = pensee.back || '(No back content)';
+        }
         
         const actionsDiv = document.createElement('div');
         actionsDiv.className = 'preview-card-actions';
@@ -306,19 +390,48 @@ function importPensees() {
     // Replace existing pensées with new ones
     penses = [...previewPensesData];
     
-    // Reset index and update card
+    // Save to localStorage
+    savePensesToStorage();
+    
+    // Reset index
     currentIndex = 0;
-    if (isFlipped) toggleCard();
-    updateCard();
+    
+    // Reinitialize page flip with new pensées
+    initPageFlip();
     
     // Close the panel
     closeManagePanel();
 }
 
-// Event listeners
-card.addEventListener('click', toggleCard);
+// Storage functions
+function savePensesToStorage() {
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(penses));
+    } catch (e) {
+        console.error('Error saving pensées to localStorage:', e);
+    }
+}
 
-// Initialize display
+function loadPensesFromStorage() {
+    try {
+        const storedData = localStorage.getItem(STORAGE_KEY);
+        if (storedData) {
+            penses = JSON.parse(storedData);
+            return true;
+        }
+    } catch (e) {
+        console.error('Error loading pensées from localStorage:', e);
+    }
+    return false;
+}
+
+// Initialize app
 document.addEventListener('DOMContentLoaded', function() {
-    updateCard();
+    // Try to load from localStorage first
+    if (!loadPensesFromStorage()) {
+        penses = []; // Start with empty array if no saved data
+    }
+    
+    // Initialize PageFlip component
+    initPageFlip();
 });
