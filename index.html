@@ -26,17 +26,52 @@
             <span class="counter">1/1</span>
             <button onclick="nextCard()">Next</button>
         </div>
-        <button onclick="randomCard()" style="margin-top: 1rem; width: 100%;">Random Pensée</button>
+        <div class="button-group">
+            <button onclick="randomCard()" style="margin-top: 1rem; width: 48%;">Random Pensée</button>
+            <button onclick="openManagePanel()" style="margin-top: 1rem; width: 48%;">Manage</button>
+        </div>
     </div>
     <div class="add-button" onclick="addPensee()">+</div>
+    
+    <!-- Manage Overlay -->
+    <div id="manageOverlay" class="overlay">
+        <div class="overlay-content">
+            <h2>Manage Pensées</h2>
+            <div class="manage-tabs">
+                <button id="importTab" class="tab-button active" onclick="showTab('import')">Import</button>
+                <button id="previewTab" class="tab-button" onclick="showTab('preview')">Preview</button>
+            </div>
+            
+            <!-- Hidden file input for image uploads -->
+            <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+            
+            <div id="importPanel" class="tab-panel active">
+                <p>Paste your pensées below (Notes.app format):</p>
+                <textarea id="pensesInput" placeholder="- [ ] Your pensée here&#10;    - [ ] Sub-thought here"></textarea>
+                <div class="button-group">
+                    <button onclick="previewPensees()">Preview</button>
+                    <button onclick="closeManagePanel()">Cancel</button>
+                </div>
+            </div>
+            
+            <div id="previewPanel" class="tab-panel">
+                <div class="preview-header">
+                    <h3>Preview Cards</h3>
+                    <button class="delete-all-button" onclick="deleteAllPreviewCards()">Delete All</button>
+                </div>
+                <div id="previewContainer" class="preview-container"></div>
+                <div class="button-group">
+                    <button onclick="importPensees()">Import</button>
+                    <button onclick="showTab('import')">Back</button>
+                    <button onclick="closeManagePanel()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="scripts/main.js"></script>
 
     <footer class="footer">
         <img src="assets/fleruron.svg" alt="Footer illustration" class="footer-image">
     </footer>
-    <script>
-        // Add this at the end of the file, after all the function definitions
-        updateCard();
-    </script>
 </body>
 </html>
