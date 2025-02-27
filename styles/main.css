@@ -69,8 +69,15 @@ body {
 .book-container {
     width: 100%;
     height: 400px;
+    max-height: 60vh;
     position: relative;
     margin-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+    .book-container {
+        height: 500px;
+    }
 }
 
 .pensee-book {

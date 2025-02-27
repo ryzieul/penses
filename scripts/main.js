@@ -124,45 +124,102 @@ function updateCounter() {
     document.querySelector('.counter').textContent = `${currentIndex + 1} of ${penses.length}`;
 }
 
-// Function to parse penses text (Notes.app format)
+// Function to parse penses text (multiple formats)
 function parsePensesText(text) {
     const lines = text.split('\n');
     const penses = [];
     let currentPense = null;
     let subthoughts = [];
+    let isProcessingSubthoughts = false;
+    
+    // Detect format - check for bullets like '◦' or Notes.app '- [ ]'
+    const hasMobileBullets = text.includes('◦');
+    const hasNotesAppFormat = text.includes('- [ ]');
     
     for (let line of lines) {
         if (!line.trim()) continue;
         
-        // Check if it's a main pensée
-        if (line.match(/^- \[ \]/)) {
-            // If we have a previous pensée, save it
-            if (currentPense) {
-                if (currentPense.trim() && subthoughts.length > 0) {
-                    penses.push({
-                        front: currentPense,
-                        back: subthoughts.join('\n'),
-                        type: 'text'
-                    });
-                } else if (currentPense.trim()) {
-                    penses.push({
-                        front: currentPense,
-                        type: 'text'
-                    });
+        // Notes.app format
+        if (hasNotesAppFormat) {
+            // Check if it's a main pensée
+            if (line.match(/^- \[ \]/)) {
+                // If we have a previous pensée, save it
+                if (currentPense) {
+                    if (currentPense.trim() && subthoughts.length > 0) {
+                        penses.push({
+                            front: currentPense,
+                            back: subthoughts.join('\n'),
+                            type: 'text'
+                        });
+                    } else if (currentPense.trim()) {
+                        penses.push({
+                            front: currentPense,
+                            type: 'text'
+                        });
+                    }
+                }
+                
+                // Start new pensée
+                const content = line.replace(/^- \[ \]/, '').trim();
+                currentPense = content;
+                subthoughts = [];
+            }
+            // Check if it's a subthought
+            else if (line.match(/^    - \[ \]/)) {
+                const subthought = line.replace(/^    - \[ \]/, '').trim();
+                if (subthought) {
+                    subthoughts.push(subthought);
                 }
             }
-            
-            // Start new pensée
-            const content = line.replace(/^- \[ \]/, '').trim();
-            currentPense = content;
-            subthoughts = [];
         }
-        // Check if it's a subthought
-        else if (line.match(/^    - \[ \]/)) {
-            const subthought = line.replace(/^    - \[ \]/, '').trim();
-            if (subthought) {
-                subthoughts.push(subthought);
+        // Mobile bullet format (◦)
+        else if (hasMobileBullets) {
+            if (line.trim().startsWith('◦')) {
+                // If there's a previous pensée being processed
+                if (currentPense !== null) {
+                    // If we're currently collecting subthoughts
+                    if (isProcessingSubthoughts && subthoughts.length > 0) {
+                        penses.push({
+                            front: currentPense,
+                            back: subthoughts.join('\n'),
+                            type: 'text'
+                        });
+                        isProcessingSubthoughts = false;
+                    } else {
+                        penses.push({
+                            front: currentPense,
+                            type: 'text'
+                        });
+                    }
+                }
+                
+                // Start a new pensée
+                currentPense = line.replace(/^◦/, '').trim();
+                subthoughts = [];
+            } else if (line.trim() && currentPense !== null) {
+                // This is a continuation or subthought for the current pensée
+                // Check if this line is an image marker (like '￼')
+                if (line.includes('￼')) {
+                    // Skip image placeholder characters
+                    continue;
+                }
+                
+                // Indent means it's a subthought
+                if (line.startsWith('\t') || line.startsWith('    ')) {
+                    isProcessingSubthoughts = true;
+                    subthoughts.push(line.trim());
+                } else {
+                    // Might be a continuation of the main pensée
+                    currentPense += ' ' + line.trim();
+                }
             }
+        }
+        // Plain text format - just treat each line as a separate pensée
+        else {
+            penses.push({
+                front: line.trim(),
+                type: 'text'
+            });
         }
     }
     
