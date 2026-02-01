@@ -13,16 +13,16 @@
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="icon" href="favicon.ico">
     <meta name="theme-color" content="#ffffff">
-    <script src="scripts/lib/page-flip.browser.js"></script>
+    <!-- <script src="scripts/lib/page-flip.browser.js"></script> -->
 </head>
 <body>
+    <!-- COMMENTED OUT: Original functionality
     <header>
         penses
     </header>
     <div class="container">
         <div id="book-container" class="book-container">
             <div id="pensee-book" class="pensee-book">
-                <!-- Pages will be loaded by JavaScript -->
             </div>
         </div>
         <div class="navigation">
@@ -36,8 +36,7 @@
         </div>
     </div>
     <div class="add-button" onclick="addPensee()">+</div>
-    
-    <!-- Manage Overlay -->
+
     <div id="manageOverlay" class="overlay">
         <div class="overlay-content">
             <h2>Manage Pensées</h2>
@@ -45,10 +44,9 @@
                 <button id="importTab" class="tab-button active" onclick="showTab('import')">Import</button>
                 <button id="previewTab" class="tab-button" onclick="showTab('preview')">Preview</button>
             </div>
-            
-            <!-- Hidden file input for image uploads -->
+
             <input type="file" id="imageUpload" accept="image/*" style="display: none;">
-            
+
             <div id="importPanel" class="tab-panel active">
                 <p>Paste your pensées below:</p>
                 <textarea id="pensesInput" placeholder="- [ ] Your pensée here (Notes.app format)&#10;    - [ ] Sub-thought here&#10;&#10;OR&#10;&#10;◦ Your pensée here (Mobile format)&#10;&#10;OR&#10;&#10;Just plain text, one thought per line"></textarea>
@@ -57,7 +55,7 @@
                     <button onclick="closeManagePanel()">Cancel</button>
                 </div>
             </div>
-            
+
             <div id="previewPanel" class="tab-panel">
                 <div class="preview-header">
                     <h3>Preview Cards</h3>
@@ -77,5 +75,22 @@
     <footer class="footer">
         <img src="assets/fleruron.svg" alt="Footer illustration" class="footer-image">
     </footer>
+    END COMMENTED OUT -->
+
+    <!-- Simple Landing Page -->
+    <main class="landing-main">
+        <div class="logo-container">
+            <img src="Assets/Tomi.svg" alt="Logo" class="logo logo-gray">
+            <img src="Assets/Tomi-red.svg" alt="Logo" class="logo logo-red">
+        </div>
+    </main>
+
+    <footer class="landing-footer">
+        <p>&copy; <span id="copyright-year"></span> Tomi Balogun</p>
+    </footer>
+
+    <script>
+        document.getElementById('copyright-year').textContent = new Date().getFullYear();
+    </script>
 </body>
 </html>

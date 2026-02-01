@@ -1,8 +1,77 @@
+/* ============================================
+   SIMPLE LANDING PAGE STYLES
+   ============================================ */
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
+
+body {
+    background-color: #F5F5F5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Logo container - centers the logo */
+.landing-main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-container {
+    position: relative;
+    width: 239px;
+    height: 376px;
+    cursor: pointer;
+}
+
+.logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.logo-gray {
+    opacity: 1;
+}
+
+.logo-red {
+    opacity: 0;
+}
+
+.logo-container:hover .logo-gray {
+    opacity: 0;
+}
+
+.logo-container:hover .logo-red {
+    opacity: 1;
+}
+
+/* Footer */
+.landing-footer {
+    padding: 2rem;
+    text-align: center;
+}
+
+.landing-footer p {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 0.75rem;
+    color: #D3D3D3;
+}
+
+/* ============================================
+   COMMENTED OUT: ORIGINAL STYLES
+   ============================================
 
 @font-face {
     font-family: "Baskerville 10 Pro";
@@ -47,10 +116,9 @@ header {
     font-weight: 300 !important;
     font-family: "Warbler Deck Regular Italic";
     font-style: italic;
-    /* letter-spacing: -0.5px; */
 }
 
-body {
+body-original {
     font-family: "Baskerville 10 Pro", sans-serif;
     background: linear-gradient(to bottom, #FAF8F3, #FFF5E8);
     min-height: 100vh;
@@ -459,3 +527,5 @@ button:hover {
   background: #fff;
   border-color: #d33;
 }
+
+END COMMENTED OUT */
