@@ -83,7 +83,93 @@
             <img src="Assets/Tomi.svg" alt="Logo" class="logo logo-gray">
             <img src="Assets/Tomi-red.svg" alt="Logo" class="logo logo-red">
         </div>
+
+        <div class="photo-viewer" id="photoViewer">
+            <img src="" alt="Photo" class="photo-image" id="photoImage">
+        </div>
     </main>
+
+    <script>
+        /* ============================================
+           PHOTO VIEWER CONFIGURATION
+           ============================================ */
+        const PHOTO_CONFIG = {
+            // Add your image filenames here
+            images: [
+                // 'photo1.jpg',
+                // 'photo2.jpg',
+                // etc.
+            ],
+            basePath: 'Assets/fotos/',      // Path to images folder
+            maxWidth: '600px',               // Maximum width of images
+            maxHeight: '400px',              // Maximum height of images
+            hoverBrightness: 1.05,           // Brightness on hover (1.0 = no change)
+            hoverScale: 1.02,                // Scale on hover (1.0 = no change)
+            transitionDuration: '0.2s',      // Hover transition speed
+            fadeInDuration: '0.3s'           // Image fade-in speed
+        };
+
+        /* ============================================
+           PHOTO VIEWER LOGIC (don't edit unless needed)
+           ============================================ */
+        let photoOrder = [];
+        let currentPhotoIndex = 0;
+
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function initPhotoViewer() {
+            const viewer = document.getElementById('photoViewer');
+            const image = document.getElementById('photoImage');
+
+            if (PHOTO_CONFIG.images.length === 0) {
+                viewer.style.display = 'none';
+                return;
+            }
+
+            // Apply configurable styles
+            viewer.style.setProperty('--max-width', PHOTO_CONFIG.maxWidth);
+            viewer.style.setProperty('--max-height', PHOTO_CONFIG.maxHeight);
+            viewer.style.setProperty('--hover-brightness', PHOTO_CONFIG.hoverBrightness);
+            viewer.style.setProperty('--hover-scale', PHOTO_CONFIG.hoverScale);
+            viewer.style.setProperty('--transition-duration', PHOTO_CONFIG.transitionDuration);
+            viewer.style.setProperty('--fade-duration', PHOTO_CONFIG.fadeInDuration);
+
+            // Shuffle images randomly
+            photoOrder = shuffleArray(PHOTO_CONFIG.images);
+            currentPhotoIndex = 0;
+
+            showPhoto(currentPhotoIndex);
+
+            // Tap/click to change
+            viewer.addEventListener('click', nextPhoto);
+        }
+
+        function showPhoto(index) {
+            const image = document.getElementById('photoImage');
+            image.classList.remove('photo-visible');
+
+            setTimeout(() => {
+                image.src = PHOTO_CONFIG.basePath + photoOrder[index];
+                image.onload = () => {
+                    image.classList.add('photo-visible');
+                };
+            }, 150);
+        }
+
+        function nextPhoto() {
+            currentPhotoIndex = (currentPhotoIndex + 1) % photoOrder.length;
+            showPhoto(currentPhotoIndex);
+        }
+
+        document.addEventListener('DOMContentLoaded', initPhotoViewer);
+    </script>
 
     <footer class="landing-footer">
         <p>&copy; <span id="copyright-year"></span> Tomi Balogun</p>

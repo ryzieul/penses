@@ -17,12 +17,15 @@ body {
     justify-content: center;
 }
 
-/* Logo container - centers the logo */
+/* Landing main - vertical layout */
 .landing-main {
     flex: 1;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    padding-top: 10vh;  /* Adjustable: space from top */
+    gap: 3rem;          /* Adjustable: space between logo and photos */
 }
 
 .logo-container {
@@ -55,6 +58,54 @@ body {
 
 .logo-container:hover .logo-red {
     opacity: 1;
+}
+
+/* ============================================
+   PHOTO VIEWER STYLES
+   ============================================ */
+.photo-viewer {
+    /* CSS Variables (controlled via JS config) */
+    --max-width: 600px;
+    --max-height: 400px;
+    --hover-brightness: 1.05;
+    --hover-scale: 1.02;
+    --transition-duration: 0.2s;
+    --fade-duration: 0.3s;
+
+    max-width: var(--max-width);
+    max-height: var(--max-height);
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.photo-image {
+    width: 100%;
+    height: auto;
+    max-width: var(--max-width);
+    max-height: var(--max-height);
+    object-fit: contain;
+    opacity: 0;
+    transition:
+        opacity var(--fade-duration) ease,
+        filter var(--transition-duration) ease,
+        transform var(--transition-duration) ease;
+}
+
+.photo-image.photo-visible {
+    opacity: 1;
+}
+
+.photo-viewer:hover .photo-image {
+    filter: brightness(var(--hover-brightness));
+    transform: scale(var(--hover-scale));
+}
+
+/* Mobile touch feedback */
+@media (hover: none) {
+    .photo-viewer:active .photo-image {
+        filter: brightness(var(--hover-brightness));
+        transform: scale(var(--hover-scale));
+    }
 }
 
 /* Footer */
